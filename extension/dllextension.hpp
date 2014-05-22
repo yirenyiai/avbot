@@ -95,7 +95,7 @@ public:
 		}
 
 		// 调用 f 吧！
-		boost::cfunction<message_sender_t, void(std::string)> sender_for_c = sender;
+		boost::cfunction<1, message_sender_t> sender_for_c = sender;
 		f(textmsg.c_str(), channel.c_str(), sender_for_c.c_func_ptr(), sender_for_c.c_void_ptr());
 
 		std::cout << "called avbot_on_message()" << std::endl;

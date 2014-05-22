@@ -65,11 +65,73 @@ int main(int, char*[])
 
  *
  */
-template<typename CFuncType, typename ClosureSignature>
+
+namespace trails_detail{
+
+	template <typename... T>
+	struct type_array {};
+
+	template <typename T, typename ArrayT>
+	struct type_insert;
+
+	template <typename T, typename... TypesT>
+	struct type_insert < T, type_array<TypesT...> >
+	{
+		typedef type_array<T, TypesT...> type;
+	};
+
+	// delete
+
+	template <size_t N, typename ArrayT>
+	struct type_delete;
+
+	template <typename T1, typename... T>
+	struct type_delete < 0, type_array<T1, T...> >
+	{
+		typedef type_array<T...> type;
+	};
+
+	template <typename T1, typename... T, size_t N>
+	struct type_delete < N, type_array<T1, T...> >
+	{
+		typedef typename type_insert < T1,
+			typename type_delete<N - 1,
+			type_array<T...>
+			>::type > ::type type;
+	};
+
+	// make function's parameters from a type_array
+
+	template <typename R, typename ArrayT>
+	struct make_func_par;
+
+	template <typename R, typename... P>
+	struct make_func_par < R, type_array<P...> >
+	{
+		typedef R type(P...);
+	};
+
+	// remove function's parameter
+
+	template <size_t N, typename F>
+	struct remove_func_par;
+
+	template <size_t N, typename R, typename... P>
+	struct remove_func_par < N, R(P...) >
+	{
+		typedef typename make_func_par < R,
+			typename type_delete<N, type_array<P...>
+			>::type > ::type type;
+	};
+
+}
+template<int void_p_index,typename _TCFuncType>
 class cfunction
 {
 public:
-	typedef typename boost::function_traits<ClosureSignature>::result_type return_type;
+	typedef typename boost::remove_pointer<_TCFuncType>::type CFuncType;
+	typedef typename trails_detail::remove_func_par<void_p_index, CFuncType>::type ClosureSignature;
+	typedef typename boost::function_traits<CFuncType>::result_type return_type;
 	typedef boost::function<ClosureSignature> closure_type;
 	private:
 		boost::shared_ptr<closure_type> m_wrapped_func;
@@ -96,9 +158,9 @@ public:
 			return m_wrapped_func.get();
 		}
 
-		CFuncType c_func_ptr()
+		CFuncType* c_func_ptr()
 		{
-			return (CFuncType)wrapperd_callback;
+			return (CFuncType*)wrapperd_callback;
 		}
 
 	private: // 这里是一套重载, 被 c_func_ptr() 依据 C 接口的类型挑一个出来并实例化.
