@@ -278,6 +278,10 @@ add_subdirectory(libmailexchange)
 add_subdirectory(deCAPTCHA)
 add_subdirectory(libavbot)
 add_subdirectory(libavlog)
+
+include_directories(V8/include)
+include(v8.cmake)
+
 add_subdirectory(extension)
 
 configure_file(version.c.in version.c @ONLY)
