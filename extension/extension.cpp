@@ -27,6 +27,7 @@
 #include "dllextension.hpp"
 #endif
 
+#include "v8.h"
 // dummy file
 
 extern avlog logfile;			// 用于记录日志文件.

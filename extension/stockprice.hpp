@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) 2013  microcai <microcai@fedoraproject.org>
  *
  * This program is free software: you can redistribute it and/or modify

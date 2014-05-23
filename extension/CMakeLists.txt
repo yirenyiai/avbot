@@ -10,14 +10,15 @@ add_library(extension STATIC
 	extension.hpp extension.cpp
 	exchangerate.hpp
 	html.hpp
+	dllextension.hpp
 	iplocation.hpp
 	joke.hpp joke.cpp
 	urlpreview.hpp	urlpreview.cpp
 	bulletin.hpp bulletin.cpp
 	metalprice.hpp stockprice.hpp
-	staticcontent.hpp
-	staticcontent.cpp
-	dllextension.hpp)
+	staticcontent.hpp staticcontent.cpp
+	v8engine.hpp v8engine.cpp
+)
 
 include_directories(../qqwry/include)
 
@@ -67,7 +68,7 @@ endif(NOT WIN32)
 
 add_subdirectory(luascript)
 
-target_link_libraries(extension libluascript)
+target_link_libraries(extension libluascript v8)
 
 endif(ENABLE_LUA)
 
