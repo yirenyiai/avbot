@@ -61,6 +61,7 @@ namespace po = boost::program_options;
 #include <boost-gregorian-date.h>
 #include <soci.h>
 
+#include <v8.h>
 #include <avhttp.hpp>
 
 #include "boost/stringencodings.hpp"
@@ -468,6 +469,9 @@ int daemon(int nochdir, int noclose)
 
 int main(int argc, char * argv[])
 {
+	v8::V8::InitializeICU();
+	v8::V8::SetFlagsFromCommandLine(&argc, argv, true);
+
 #ifdef _WIN32
 	::InitCommonControls();
 #endif
@@ -866,5 +870,6 @@ rungui:
 #endif // defined(SIGQUIT)
 	terminator_signal.async_wait(boost::bind(&boost::asio::io_service::stop, &io_service));
 	avloop_run_gui(io_service);
+	v8::V8::Dispose();
 	return 0;
 }
