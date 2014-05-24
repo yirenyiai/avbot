@@ -115,7 +115,6 @@ set(V8_SOURCES_COMMON
 	V8/src/hydrogen-sce.cc
 	V8/src/hydrogen-store-elimination.cc
 	V8/src/hydrogen-uint32-analysis.cc
-	V8/src/i18n.cc
 	V8/src/ic.cc
 	V8/src/icu_util.cc
 	V8/src/incremental-marking.cc
