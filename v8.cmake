@@ -1,31 +1,72 @@
+
+include(TargetArch.cmake)
+
+target_architecture(V8_TAEGET_ARCH)
+
+IF (${V8_TAEGET_ARCH} MATCHES "x86_64|AMD64")
+	set(V8_ARCH_DIR "x64")
+	add_definitions(-DV8_TARGET_ARCH_X64)
+elseif(${V8_TAEGET_ARCH} MATCHES "x86|i386")
+	set(V8_ARCH_DIR "ia32")
+	add_definitions(-DV8_TARGET_ARCH_IA32)
+elseif(${V8_TAEGET_ARCH} MATCHES "arm")
+	set(V8_ARCH_DIR "arm")
+	add_definitions(-DV8_TARGET_ARCH_ARM)
+endif()
+
+message(STATUS " v8 arch is ${V8_ARCH_DIR}")
+
+set(V8_ARCH_SOURCES
+	V8/src/${V8_ARCH_DIR}/assembler-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/builtins-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/codegen-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/code-stubs-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/cpu-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/debug-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/deoptimizer-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/disasm-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/frames-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/full-codegen-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/ic-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/lithium-codegen-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/lithium-gap-resolver-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/lithium-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/macro-assembler-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/regexp-macro-assembler-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/simulator-${V8_ARCH_DIR}.cc
+	V8/src/${V8_ARCH_DIR}/stub-cache-${V8_ARCH_DIR}.cc
+)
+
 set(V8_SOURCES_COMMON
+	${V8_ARCH_SOURCES}
 	V8/src/accessors.cc
+	V8/src/allocation.cc
 	V8/src/allocation-site-scopes.cc
 	V8/src/allocation-tracker.cc
-	V8/src/allocation.cc
 	V8/src/api.cc
 	V8/src/arguments.cc
 	V8/src/assembler.cc
 	V8/src/assert-scope.cc
 	V8/src/ast.cc
-	V8/src/bignum-dtoa.cc
+	V8/src/atomicops_internals_x86_gcc.cc
 	V8/src/bignum.cc
+	V8/src/bignum-dtoa.cc
 	V8/src/bootstrapper.cc
 	V8/src/builtins.cc
 	V8/src/cached-powers.cc
 	V8/src/checks.cc
-	V8/src/code-stubs-hydrogen.cc
-	V8/src/code-stubs.cc
 	V8/src/codegen.cc
+	V8/src/code-stubs.cc
+	V8/src/code-stubs-hydrogen.cc
 	V8/src/compilation-cache.cc
 	V8/src/compiler.cc
 	V8/src/contexts.cc
 	V8/src/conversions.cc
 	V8/src/counters.cc
-	V8/src/cpu-profiler.cc
 	V8/src/cpu.cc
-	V8/src/d8-debug.cc
+	V8/src/cpu-profiler.cc
 	V8/src/d8.cc
+	V8/src/d8-debug.cc
 	V8/src/data-flow.cc
 	V8/src/date.cc
 	V8/src/dateparser.cc
@@ -35,8 +76,8 @@ set(V8_SOURCES_COMMON
 	V8/src/disassembler.cc
 	V8/src/diy-fp.cc
 	V8/src/dtoa.cc
-	V8/src/elements-kind.cc
 	V8/src/elements.cc
+	V8/src/elements-kind.cc
 	V8/src/execution.cc
 	V8/src/factory.cc
 	V8/src/fast-dtoa.cc
@@ -47,12 +88,13 @@ set(V8_SOURCES_COMMON
 	V8/src/func-name-inferrer.cc
 	V8/src/global-handles.cc
 	V8/src/handles.cc
+	V8/src/heap.cc
 	V8/src/heap-profiler.cc
 	V8/src/heap-snapshot-generator.cc
-	V8/src/heap.cc
 	V8/src/hydrogen-bce.cc
 	V8/src/hydrogen-bch.cc
 	V8/src/hydrogen-canonicalize.cc
+	V8/src/hydrogen.cc
 	V8/src/hydrogen-check-elimination.cc
 	V8/src/hydrogen-dce.cc
 	V8/src/hydrogen-dehoist.cc
@@ -73,7 +115,7 @@ set(V8_SOURCES_COMMON
 	V8/src/hydrogen-sce.cc
 	V8/src/hydrogen-store-elimination.cc
 	V8/src/hydrogen-uint32-analysis.cc
-	V8/src/hydrogen.cc
+	V8/src/i18n.cc
 	V8/src/ic.cc
 	V8/src/icu_util.cc
 	V8/src/incremental-marking.cc
@@ -82,37 +124,38 @@ set(V8_SOURCES_COMMON
 	V8/src/isolate.cc
 	V8/src/jsregexp.cc
 	V8/src/lithium-allocator.cc
-	V8/src/lithium-codegen.cc
 	V8/src/lithium.cc
+	V8/src/lithium-codegen.cc
 	V8/src/liveedit.cc
-	V8/src/log-utils.cc
 	V8/src/log.cc
+	V8/src/log-utils.cc
 	V8/src/mark-compact.cc
 	V8/src/messages.cc
 	V8/src/mksnapshot.cc
+	V8/src/objects.cc
 	V8/src/objects-debug.cc
 	V8/src/objects-printer.cc
 	V8/src/objects-visiting.cc
-	V8/src/objects.cc
 	V8/src/once.cc
 	V8/src/optimizing-compiler-thread.cc
 	V8/src/parser.cc
+
 	V8/src/preparse-data.cc
 	V8/src/preparser.cc
 	V8/src/prettyprinter.cc
 	V8/src/profile-generator.cc
 	V8/src/property.cc
+	V8/src/regexp-macro-assembler.cc
 	V8/src/regexp-macro-assembler-irregexp.cc
 	V8/src/regexp-macro-assembler-tracer.cc
-	V8/src/regexp-macro-assembler.cc
 	V8/src/regexp-stack.cc
 	V8/src/rewriter.cc
-	V8/src/runtime-profiler.cc
 	V8/src/runtime.cc
+	V8/src/runtime-profiler.cc
 	V8/src/safepoint-table.cc
 	V8/src/sampler.cc
-	V8/src/scanner-character-streams.cc
 	V8/src/scanner.cc
+	V8/src/scanner-character-streams.cc
 	V8/src/scopeinfo.cc
 	V8/src/scopes.cc
 	V8/src/serialize.cc
@@ -132,28 +175,43 @@ set(V8_SOURCES_COMMON
 	V8/src/typing.cc
 	V8/src/unicode.cc
 	V8/src/utils.cc
-	V8/src/v8-counters.cc
 	V8/src/v8.cc
-	V8/src/v8dll-main.cc
+	V8/src/v8-counters.cc
 	V8/src/v8threads.cc
 	V8/src/variables.cc
 	V8/src/version.cc
-	V8/src/win32-math.cc
 	V8/src/zone.cc
-#	V8/src/platform/condition-variable.cc
-#	V8/src/platform/mutex.cc
-#	V8/src/platform/semaphore.cc
-#	V8/src/platform/socket.cc
-#	V8/src/platform/time.cc
+
+	V8/src/platform/condition-variable.cc
+	V8/src/platform/mutex.cc
+	V8/src/platform/semaphore.cc
+	V8/src/platform/socket.cc
+	V8/src/platform/time.cc
+
+	V8/src/utils/random-number-generator.cc
+
+	V8/src/extensions/externalize-string-extension.cc
+	V8/src/extensions/gc-extension.cc
+	V8/src/extensions/trigger-failure-extension.cc
+	V8/src/extensions/free-buffer-extension.cc
+	V8/src/extensions/statistics-extension.cc
+
+
+	V8/gen/experimental-libraries.cc
+	V8/gen/libraries.cc
+	V8/gen/trig-table.cc
 )
 
+
+message(STATUS ${V8_SOURCES_COMMON})
+
 if(WIN32)
-list(APPEND V8_SOURCES_COMMON V8/src/d8-windows.cc)
+list(APPEND V8_SOURCES_COMMON V8/src/d8-windows.cc 	V8/src/win32-math.cc)
 else()
 list(APPEND V8_SOURCES_COMMON V8/src/d8-posix.cc)
 endif()
 
-if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86|i686") 
+if("${V8_TAEGET_ARCH}" MATCHES "x86|i386")
 list(APPEND V8_SOURCES_COMMON V8/src/atomicops_internals_x86_gcc.cc)
 endif()
 
@@ -162,7 +220,7 @@ set(V8_SOURCES_PLATFORM V8/src/platform-win32.cc)
 endif()
 
 IF("${CMAKE_SYSTEM}" MATCHES "Linux")
-set(V8_SOURCES_PLATFORM	V8/src/platform-linux.cc)
+set(V8_SOURCES_PLATFORM	V8/src/platform-linux.cc V8/src/platform-posix.cc)
 endif()
 
 #	V8/src/platform-cygwin.cc
@@ -174,8 +232,9 @@ endif()
 #	V8/src/platform-solaris.cc
 #	V8/src/platform-win32.cc
 
-file(GLOB V8_SOURCES_OTHERS "V8/src/*/*.cc")
 
-add_library(v8 STATIC ${V8_SOURCES_COMMON} ${V8_SOURCES_PLATFORM} ${V8_SOURCES_OTHERS})
+add_library(v8 STATIC  ${V8_SOURCES_OTHERS} ${V8_SOURCES_COMMON} ${V8_SOURCES_PLATFORM} )
 
-target_include_directories(v8 PRIVATE V8/src)
+target_include_directories(v8 BEFORE PRIVATE V8/src)
+
+
